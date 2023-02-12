@@ -73,7 +73,7 @@ Let's practice making a commit by replacing "Hello, world" with "Hello, `<your n
 
 You'll need to set up a Python environment for working your Streamlit application locally. Streamlit's only officially-supported environment
 manager on Windows, macOS, and linux is [Anaconda Navigator](https://docs.anaconda.com/anaconda/navigator/). Please make sure you 
-have this installed. (The following is adapted from Streamlit's [documentation](https://docs.streamlit.io/library/get-started/installation).)
+have this installed. (The following is adapted from Streamlit's [documentation](https://docs.streamlit.icoo/library/get-started/installation).)
 
 #### Create a new Python environment with Streamlit
 

@@ -20,19 +20,19 @@ def load_data():
     value_name="Deaths",
 )
 
-    pop_df = pd.read_csv("https://raw.githubusercontent.com/hms-dbmi/bmi706-2022/main/cancer_data/population.csv").melt(  # type: ignore
+pop_df = pd.read_csv("https://raw.githubusercontent.com/hms-dbmi/bmi706-2022/main/cancer_data/population.csv").melt(  # type: ignore
     id_vars=["Country", "Year", "Sex"],
     var_name="Age",
     value_name="Pop",
 )
 
-    df = pd.merge(left=cancer_df, right=pop_df, how="left")
-    df["Pop"] = df.groupby(["Country", "Sex", "Age"])["Pop"].fillna(method="bfill")
-    df.dropna(inplace=True)
+df = pd.merge(left=cancer_df, right=pop_df, how="left")
+df["Pop"] = df.groupby(["Country", "Sex", "Age"])["Pop"].fillna(method="bfill")
+df.dropna(inplace=True)
 
-    df = df.groupby(["Country", "Year", "Cancer", "Age", "Sex"]).sum().reset_index()
-    df["Rate"] = df["Deaths"] / df["Pop"] * 100_000
-    return df
+df = df.groupby(["Country", "Year", "Cancer", "Age", "Sex"]).sum().reset_index()
+df["Rate"] = df["Deaths"] / df["Pop"] * 100_000
+return df
 
 
 # Uncomment the next line when finished

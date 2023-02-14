@@ -34,7 +34,7 @@ df = load_data()
 ### P1.2 ###
 
 
-st.write("Age-specific cancer mortality rates")
+st.header("Age-specific cancer mortality rates")
 
 # min_year = df['Year'].min().astype(int)
 # max_year = df['Year'].max().astype(int)
@@ -48,6 +48,7 @@ subset = df[df["Year"] == select_year]
 ### P2.2 ###
 # replace with st.radio
 sex = "M"
+male = df['Sex'].tolist().index('M')
 
 select_gender = st.radio ('Sex', ('M', 'F'))
 subset = subset[subset["Sex"] == select_gender]
@@ -95,14 +96,20 @@ ages = [
     "Age >64",
 ]
 
+
+age_selection = alt.selection_single(fields=['Age'], bind='legend')
+
 chart = alt.Chart(subset).mark_rect().encode(
     x=alt.X("Age:O", sort=ages),
     y=alt.Y("Country:N"),
     color=alt.Color("Rate:Q", title="Mortality rate per 100k", scale=alt.Scale(type='log', domain=(0.01, 1000), clamp=True)),
-    tooltip=["Rate:Q"],
+    tooltip=["Rate:Q"]
 ).properties(
     title=f"{dd_selectbox_cancer} mortality rates for {'males' if select_gender == 'M' else 'females'} in {select_year}",
+).add_selection(
+    age_selection
 )
+
 ### P2.5 ###
 
 
@@ -116,3 +123,24 @@ if len(countries_in_subset) != len(countries):
         missing = set(countries) - set(countries_in_subset)
         st.write("No data available for " + ", ".join(missing) + ".")
 
+
+subset_year = df[df["Year"] == select_year]
+subset_year_country = subset_year[subset_year["Country"].isin(select_country)]
+
+
+bar_chart = alt.Chart(subset).mark_bar().encode(
+    x=alt.X("Pop:Q", sort=ages, title='Population'),
+    y=alt.Y("Country:N", title='Country', sort=ages),
+    color=alt.Color("Age:O", sort=ages, title='Age'),
+    opacity=alt.condition(age_selection, alt.value(1), alt.value(0.2)),
+    tooltip=["Age:O", "Pop:Q"]
+).properties(
+    title=f"Population by Country and Age Group in {select_year}",
+).add_selection(
+    age_selection
+)
+#.transform_filter(
+#select_year
+#)
+
+st.altair_chart(bar_chart, use_container_width=True)
